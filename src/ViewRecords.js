@@ -14,6 +14,9 @@ const ViewRecords = () => {
   const [editingRecord, setEditingRecord] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const recordsPerPage = 10; // Number of records per page
+
   useEffect(() => {
     const fetchRecords = async () => {
       try {
@@ -78,6 +81,24 @@ const ViewRecords = () => {
       .includes(searchQuery.toLowerCase())
   );
 
+  // Adjust pagination to stay consistent
+  const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+  const startIndex = (currentPage - 1) * recordsPerPage;
+  const displayedRecords = filteredRecords.slice(startIndex, startIndex + recordsPerPage);
+
+  const handlePageChange = (direction) => {
+    if (direction === 'prev' && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    } else if (direction === 'next' && currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Reset to first page only when the search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   if (loading) {
     return <div style={loadingStyles}>Loading records...</div>;
   }
@@ -95,75 +116,73 @@ const ViewRecords = () => {
           style={searchInputStyles}
         />
       </div>
-      {filteredRecords.length === 0 ? (
+      {displayedRecords.length === 0 ? (
         <p style={noRecordsStyles}>No records found.</p>
       ) : (
-        <table style={tableStyles}>
-          <thead>
-            <tr>
-            <th onClick={() => handleSort('First Name Name')}>
-                First Name {sortField === 'First Name Name' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('Respondents')}>
-                Sur Name {sortField === 'Respondents' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-             
-              <th onClick={() => handleSort('age')}>
-                Age {sortField === 'age' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('sex')}>
-                Sex {sortField === 'sex' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('Ethnic')}>
-                Ethnic {sortField === 'Ethnic' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('academic_perfromance')}>
-                Academic Performance {sortField === 'academic_perfromance' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('adamemic_description')}>
-                Academic Description {sortField === 'adamemic_description' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('IQ')}>
-                IQ {sortField === 'IQ' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('type_school')}>
-                Type of School {sortField === 'type_school' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('socio_economic_status')}>
-                Socio-Economic Status {sortField === 'socio_economic_status' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('Study_Habit')}>
-                Study Habit {sortField === 'Study_Habit' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => handleSort('NAT_Results')}>
-                NAT Results {sortField === 'NAT_Results' && (sortDirection === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRecords.map((record) => (
-              <tr key={record.id}>
-                <td>{record.FirstName}</td>
-                <td>{record.Respondents}</td>
-                <td>{record.age}</td>
-                <td>{record.sex}</td>
-                <td>{record.Ethnic}</td>
-                <td>{record.academic_perfromance}</td>
-                <td>{record.adamemic_description}</td>
-                <td>{record.IQ}</td>
-                <td>{record.type_school}</td>
-                <td>{record.socio_economic_status}</td>
-                <td>{record.Study_Habit}</td>
-                <td>{record.NAT_Results}</td>
-                <td>
-                  <button style={buttonStyles} onClick={() => handleEdit(record)}>Edit</button>
-                  <button style={deleteButtonStyles} onClick={() => handleDelete(record.id)}>Delete</button>
-                </td>
+        <>
+          <table style={tableStyles}>
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('FirstName')}>First Name</th>
+                <th onClick={() => handleSort('Respondents')}>Sur Name</th>
+                <th onClick={() => handleSort('age')}>Age</th>
+                <th onClick={() => handleSort('sex')}>Sex</th>
+                <th onClick={() => handleSort('Ethnic')}>Ethnic</th>
+                <th onClick={() => handleSort('academic_perfromance')}>Academic Performance</th>
+                <th onClick={() => handleSort('adamemic_description')}>Academic Description</th>
+                <th onClick={() => handleSort('IQ')}>IQ</th>
+                <th onClick={() => handleSort('type_school')}>Type of School</th>
+                <th onClick={() => handleSort('socio_economic_status')}>Socio-Economic Status</th>
+                <th onClick={() => handleSort('Study_Habit')}>Study Habit</th>
+                <th onClick={() => handleSort('NAT_Results')}>NAT Results</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayedRecords.map((record) => (
+                <tr key={record.id} style={rowStyles}>
+                  <td>{record.FirstName}</td>
+                  <td>{record.Respondents}</td>
+                  <td>{record.age}</td>
+                  <td>{record.sex}</td>
+                  <td>{record.Ethnic}</td>
+                  <td>{record.academic_perfromance}</td>
+                  <td>{record.adamemic_description}</td>
+                  <td>{record.IQ}</td>
+                  <td>{record.type_school}</td>
+                  <td>{record.socio_economic_status}</td>
+                  <td>{record.Study_Habit}</td>
+                  <td>{record.NAT_Results}</td>
+                  <td>
+                    <button style={buttonStyles} onClick={() => handleEdit(record)}>
+                      Edit
+                    </button>
+                    <button style={deleteButtonStyles} onClick={() => handleDelete(record.id)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={paginationStyles}>
+            <button
+              style={buttonStyles}
+              onClick={() => handlePageChange('prev')}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button
+              style={buttonStyles}
+              onClick={() => handlePageChange('next')}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </>
       )}
       <Modal
         isOpen={isModalOpen}
@@ -176,13 +195,18 @@ const ViewRecords = () => {
   );
 };
 
+
 const containerStyles = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
-  padding: '20px',
-  minHeight: '100vh',
+  padding: '10px',
+  minHeight: '150vh',
+  backgroundColor: '#92a8d1',
+  marginRight:'-200px',
+  marginTop: '-20px',
+  width: '100%'
 };
 
 const loadingStyles = {
@@ -198,13 +222,13 @@ const headerStyles = {
 const searchContainerStyles = {
   position: 'relative',
   marginBottom: '20px',
-  marginRight:'580px'
+  marginRight:'320px'
 };
 
 const searchIconStyles = {
   position: 'absolute',
   top: '30px',
-  left: '10px',
+  left: '20px',
   transform: 'translateY(-50%)',
   color: '#007bff',
 };
@@ -215,6 +239,7 @@ const searchInputStyles = {
   marginBottom: '20px',
   border: '1px solid #ccc',
   borderRadius: '5px',
+  marginRight:'135px'
 };
 
 const noRecordsStyles = {
@@ -223,9 +248,15 @@ const noRecordsStyles = {
 };
 
 const tableStyles = {
-  width: '800px',
+  width: '50%', // Adjusted width for a more responsive design
+  marginRight: '-200px', // Center the table within the container
   borderCollapse: 'collapse',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+};
+
+const rowStyles = {
+  textAlign: 'left',
+  borderBottom: '1px solid #ddd', // Optional: Add a bottom border for rows
 };
 
 const buttonStyles = {
@@ -237,6 +268,7 @@ const buttonStyles = {
   color: 'white',
   cursor: 'pointer',
   transition: 'background-color 0.3s ease',
+  width: '100%'
 };
 
 const deleteButtonStyles = {
@@ -245,4 +277,10 @@ const deleteButtonStyles = {
   marginTop:'20px',
 };
 
+const paginationStyles = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: '20px',
+};
 export default ViewRecords;

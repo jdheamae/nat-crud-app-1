@@ -133,8 +133,26 @@ const NatAnalytics = () => {
         pointStyle: 'rect', // Set the point shape to circle
         pointRadius: 5 // You can adjust the size of the circle here
       }
+      ,
+      {
+        label: 'Age vs NAT Results with School Type and IQ',
+        data: records.map(item => ({
+          x: item.age,
+          y: item.NAT_Results,
+          r: (iqMapping[item.IQ.toLowerCase()] || 1) * 3 // Bubble size proportional to IQ
+        })),
+        backgroundColor: records.map(item =>
+          schoolMap[item.type_school.toLowerCase()] === 1 ? 'rgba(75, 192, 192, 0.7)' : 'rgba(255, 99, 132, 0.7)'
+        ), // Private: Blue, Public: Red
+        borderColor: 'rgba(0, 0, 0, 0.3)',
+        borderWidth: 1
+      }
+      
     ]
   };
+
+
+
 
   return (
     <div className="nat-analytics-container">
@@ -149,12 +167,9 @@ const NatAnalytics = () => {
            
          <div className="item_1"> <Scatter   data={recordList} />
          </div>
-        
-         <div className="item_2"> <Scatter   data={recordList} />
-         </div>
-         <div className="item_3"> <Scatter data={recordList} /></div>
-         <div className="item_4"> <Scatter data={recordList} /></div>
+
         </div>
+        
         
         
       )}

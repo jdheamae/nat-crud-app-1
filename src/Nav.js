@@ -29,16 +29,16 @@ const navStyles = {
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  padding: '20px',
+  padding: '10px',
   backgroundColor: '#ffffff',
   boxShadow: '2px 0 5px rgba(0, 0, 0, 0.2)',
-  zIndex: '100',
+  zIndex: '90',
   transition: 'width 0.3s ease',
 };
 
 const expandedNavStyles = {
   ...navStyles,
-  width: '250px',
+  width: '200px',
 };
 
 const logoStyles = {

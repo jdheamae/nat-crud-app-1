@@ -18,7 +18,8 @@ const buttonStyles = {
   backgroundColor: 'green',
   color: '#fff',
   cursor: 'pointer',
-   zindex:'1'
+   zindex:'1',
+   border:  '1px solid green'
 };
 const fileInputStyles = {
   marginTop: '150px',
@@ -52,7 +53,7 @@ const uploadButtonStyles = {
 const containerStyles = {
   padding: '20px',
   maxWidth: '800px',
-  border:'solid',
+  border:'1px solid',
   borderRadius:'10px',
   paddingBottom:'40px',
   margin: '0 auto',
@@ -72,7 +73,7 @@ const rowStyles = {
 const inputStyles = {
   padding: '8px',
   borderRadius: '4px',
-  border: '1px solid #ccc',
+  border: '1px solid black',
   flex: 1,
 };
 const AddResData = () => {
